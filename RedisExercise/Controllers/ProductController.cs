@@ -22,7 +22,7 @@ public class ProductController : ControllerBase
 		string cacheKey = $"product:{id}";
 
 		var product = await _cacheService.GetOrAddAsync(cacheKey,
-			async () => await _context.Products.FindAsync(id), TimeSpan.FromMinutes(10));
+			async () => await _context.Products.FindAsync(id));
 
 		if (product == null)
 			return NotFound();
@@ -39,7 +39,7 @@ public class ProductController : ControllerBase
 		_context.Products.Add(product);
 		await _context.SaveChangesAsync();
 
-		await _cacheService.SetStringAsync($"product:{product.Id}", product, TimeSpan.FromMinutes(10));
+		await _cacheService.SetStringAsync($"product:{product.Id}", product);
 
 		return CreatedAtAction(nameof(GetProduct), new { id = product.Id }, product);
 	}
@@ -62,7 +62,7 @@ public class ProductController : ControllerBase
 
 		await _context.SaveChangesAsync();
 
-		await _cacheService.SetStringAsync($"product:{id}", existingProduct, TimeSpan.FromMinutes(10));
+		await _cacheService.SetStringAsync($"product:{id}", existingProduct);
 
 		return Ok(existingProduct);
 	}

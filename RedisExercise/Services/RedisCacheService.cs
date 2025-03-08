@@ -26,7 +26,7 @@ public class RedisCacheService : ICacheService
 
 			if (data != null)
 			{
-				await SetStringAsync(key, data, expiration);
+				await SetStringAsync(key, data, expiration?? TimeSpan.FromMinutes(10));
 			}
 
 			return data;
@@ -41,7 +41,7 @@ public class RedisCacheService : ICacheService
 	public async Task SetStringAsync<T>(string key, T value, TimeSpan? expiration = null)
 	{
 		var serializedValue = JsonConvert.SerializeObject(value);
-		await _redisDb.StringSetAsync(key, serializedValue, expiration);
+		await _redisDb.StringSetAsync(key, serializedValue, expiration ?? TimeSpan.FromMinutes(10));
 	}
 
 	public async Task RemoveAsync(string key)
